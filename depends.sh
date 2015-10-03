@@ -7,7 +7,7 @@
 # 		   and now DST as well!
 # 
 #
-# Version 1.1
+# Version 1.2
 
 
 dpkg --add-architecture i386
@@ -24,3 +24,6 @@ apt-get install lib32tinfo5 -y
 # Added for support with DST
 apt-get install libcurl4-gnutls-dev:i386 -y
 apt-get install lib32stdc++6 -y
+
+# Added for support for certain DST scripts
+apt-get install psmisc -y
