@@ -9,12 +9,15 @@
 # mysite:	http://www.cameronmunroe.com
 # site:		https://qwdsa.com/c/threads/dont-starve-together-cave-installer.196/
 #
-# Ver:		1.6
+# Ver:		1.7
 
 
 # ====================================================================
 #			Changelog
 # ====================================================================
+
+# Ver 1.7 (beta)
+# Begin adding support for January 2016 full release.
 
 # Ver 1.6
 # Added better functionality for wipedst.sh
@@ -32,36 +35,18 @@
 #			Notes
 # ====================================================================
 
-# Server Token!!!! IMPORTANT WONT START UNLESS YOU DO THIS STEP
-# 
+# cluster_token!!!! IMPORTANT, SERVER WONT START UNLESS YOU DO THIS STEP!!!
 # To generate a server token, do the following:
-# Run Donâ€™t Starve Together.   Click Play Multiplayer.
-# Press tilde (~) (or Ã¹ on Azerty keyboards) to open the developer console.
-# Type:  TheNet:GenerateServerToken()
-# The server token is written to your log.txt file located in:
-# On Windows: /My Documents/Klei/DoNotStarveTogether /log.txt
-# On Linux: /<USERNAME>/.klei/DoNotStarveTogether/log.txt
-# 
-# Grab the token from (near) the bottom of your log.txt file.
-# 
-# Add your server token to your servers settings.ini
-# On Windows: Documents/Klei/DoNotStarveTogether/Settings.ini
-# On Linux: /<USERNAME>/.klei/DoNotStarveTogether/Settings.ini
-#  
-# Look for a heading that reads [account]  if this heading does not exist, add it to the bottom of the file.  
-# 
-# Under [account] add this line:
-# server_token = Server token Generated From TheNet:GenerateServerToken() 
-#   
-# NOTE: You can re-use a single server_token on multiple servers
-# NOTE: Your save directory, log.txt and settings.ini files are created the first time you start the server or game client.
-# NOTE: We will attempt to automate this in the future.  
+# Run Do Not Starve Together.   Click Play Multiplayer.
+# Press tilde (~) (or ù on Azerty keyboards) to open the developer console.
+# Type:  TheNet:GenerateClusterToken()
+# The cluster token is written to your cluster_token.txt file located in:
+# On Windows: Documents/Klei/DoNotStarveTogether
+# On Linux: <USERNAME>/.klei/DoNotStarveTogether
+# Please add the cluster_token.txt to ~/.klei/DoNotStarveTogether/server/cluster_token.txt
 
 # Make sure to install steam depends!
-# wget -O - https://cdn.content-network.net/sc/deb-tf2-depend.sh | bash
-
-# also install
-# libcurl4-gnutls-dev:i386
+# wget -qO- https://git.enjen.net/Munzy/Valve-Linux-Server-Installs/raw/master/deb-tf2-depend.sh  | bash
 
 
 # ====================================================================
@@ -79,7 +64,7 @@ echo '@ShutdownOnFailedCommand 1' > update.script
 echo '@NoPromptForPassword 1' >> update.script
 echo 'login anonymous' >> update.script
 echo 'force_install_dir dst' >> update.script
-echo 'app_update 343050 -beta cavesbeta' >> update.script
+echo 'app_update 343050' >> update.script
 echo 'quit' >> update.script
 echo 'quit' >> update.script
 
@@ -87,7 +72,7 @@ echo '@ShutdownOnFailedCommand 1' > updatev.script
 echo '@NoPromptForPassword 1' >> updatev.script
 echo 'login anonymous' >> updatev.script
 echo 'force_install_dir dst' >> updatev.script
-echo 'app_update 343050 -beta cavesbeta validate' >> updatev.script
+echo 'app_update 343050 validate' >> updatev.script
 echo 'quit' >> updatev.script
 echo 'quit' >> updatev.script
 
@@ -103,16 +88,16 @@ echo './steamcmd.sh +runscript updatev.script' >> verifydst.sh
 
 echo '#!/bin/bash' > rundst.sh
 echo 'cd dst/bin/' >> rundst.sh
-echo 'screen -d -m ./dontstarve_dedicated_server_nullrenderer -console' >> rundst.sh
-echo 'screen -d -m ./dontstarve_dedicated_server_nullrenderer  -conf_dir cave -console' >> rundst.sh
+echo 'screen -d -m ./dontstarve_dedicated_server_nullrenderer -console -cluster server -shard master' >> rundst.sh
+echo 'screen -d -m ./dontstarve_dedicated_server_nullrenderer -console -cluster server -shard cave' >> rundst.sh
 
 
 echo '#!/bin/bash' > stopdst.sh
 echo 'killall screen' >> stopdst.sh
 
 echo '#!/bin/bash' > wipedst.sh
-echo 'rm -rf ~/.klei/DoNotStarveTogether/save' >> wipedst.sh
-echo 'rm -rf ~/.klei/cave/save' >> wipedst.sh
+echo 'rm -rf ~/.klei/DoNotStarveTogether/server/master/save' >> wipedst.sh
+echo 'rm -rf ~/.klei/DoNotStarveTogether/server/cave/save' >> wipedst.sh
 
 chmod +x verifydst.sh
 chmod +x updatedst.sh
@@ -130,87 +115,68 @@ chmod +x wipedst.sh
 # ====================================================================
 #			Build Config
 # ====================================================================
-mkdir -p ~/.klei/DoNotStarveTogether/
+mkdir -p ~/.klei/DoNotStarveTogether/server/
 
-echo '[network]' > ~/.klei/DoNotStarveTogether/settings.ini
-echo 'default_server_name = DST Server - Main' >> ~/.klei/DoNotStarveTogether/settings.ini
-echo 'default_server_discription = DST Server With Caves' >> ~/.klei/DoNotStarveTogether/settings.ini
-echo 'server_port = 10999' >> ~/.klei/DoNotStarveTogether/settings.ini
-echo 'server_password = ' >> ~/.klei/DoNotStarveTogether/settings.ini
-echo 'max_players = 10' >> ~/.klei/DoNotStarveTogether/settings.ini
-echo 'pvp = false' >> ~/.klei/DoNotStarveTogether/settings.ini
-echo 'game_mode = endless' >> ~/.klei/DoNotStarveTogether/settings.ini
-echo 'enable_autosaver = true' >> ~/.klei/DoNotStarveTogether/settings.ini
-echo 'tick_rate = 30' >> ~/.klei/DoNotStarveTogether/settings.ini
-echo 'connection_timeout = 8000' >> ~/.klei/DoNotStarveTogether/settings.ini
-echo 'pause_when_empty = true' >> ~/.klei/DoNotStarveTogether/settings.ini
-echo 'steam_group_id = ' >> ~/.klei/DoNotStarveTogether/settings.ini
-echo 'steam_group_only = false' >> ~/.klei/DoNotStarveTogether/settings.ini
-echo 'offline_server = false' >> ~/.klei/DoNotStarveTogether/settings.ini
-echo '' >> ~/.klei/DoNotStarveTogether/settings.ini
-echo '[account]' >> ~/.klei/DoNotStarveTogether/settings.ini
-echo 'server_token = Config me' >> ~/.klei/DoNotStarveTogether/settings.ini
-echo '' >> ~/.klei/DoNotStarveTogether/settings.ini
-echo '[MISC]' >> ~/.klei/DoNotStarveTogether/settings.ini
-echo 'CONSOLE_ENABLED = true' >> ~/.klei/DoNotStarveTogether/settings.ini
-echo 'autocompiler_enabled = true' >> ~/.klei/DoNotStarveTogether/settings.ini
-echo '' >> ~/.klei/DoNotStarveTogether/settings.ini
-echo '[shard]' >> ~/.klei/DoNotStarveTogether/settings.ini
-echo 'shard_enable = true' >> ~/.klei/DoNotStarveTogether/settings.ini
-echo 'is_master = true' >> ~/.klei/DoNotStarveTogether/settings.ini
-echo 'master_port = 11200' >> ~/.klei/DoNotStarveTogether/settings.ini
-echo 'cluster_key = qwdsa' >> ~/.klei/DoNotStarveTogether/settings.ini
-echo '' >> ~/.klei/DoNotStarveTogether/settings.ini
+touch ~/.klei/DoNotStarveTogether/server/cluster_token.txt
 
-mkdir -p ~/.klei/cave/
+rm ~/.klei/DoNotStarveTogether/server/cluster.ini
+echo '[GAMEPLAY]' >> ~/.klei/DoNotStarveTogether/server/cluster.ini
+echo 'game_mode = endless' >> ~/.klei/DoNotStarveTogether/server/cluster.ini
+echo 'max_players = 10' >> ~/.klei/DoNotStarveTogether/server/cluster.ini
+echo 'pvp = false' >> ~/.klei/DoNotStarveTogether/server/cluster.ini
+echo 'pause_when_empty = true' >> ~/.klei/DoNotStarveTogether/server/cluster.ini
+echo '' >> ~/.klei/DoNotStarveTogether/server/cluster.ini
+echo '[NETWORK]' >> ~/.klei/DoNotStarveTogether/server/cluster.ini
+echo 'cluster_description = A Wonderful Description' >> ~/.klei/DoNotStarveTogether/server/cluster.ini
+echo 'cluster_name = Enjen Powered' >> ~/.klei/DoNotStarveTogether/server/cluster.ini
+echo 'cluster_intention = cooperative' >> ~/.klei/DoNotStarveTogether/server/cluster.ini
+echo 'cluster_password =' >> ~/.klei/DoNotStarveTogether/server/cluster.ini
+echo '' >> ~/.klei/DoNotStarveTogether/server/cluster.ini
+echo '[MISC]' >> ~/.klei/DoNotStarveTogether/server/cluster.ini
+echo 'console_enabled = true' >> ~/.klei/DoNotStarveTogether/server/cluster.ini
+echo '' >> ~/.klei/DoNotStarveTogether/server/cluster.ini
+echo '[SHARD]' >> ~/.klei/DoNotStarveTogether/server/cluster.ini
+echo 'shard_enabled = true' >> ~/.klei/DoNotStarveTogether/server/cluster.ini
+echo 'bind_ip = 127.0.0.1' >> ~/.klei/DoNotStarveTogether/server/cluster.ini
+echo 'master_ip = 127.0.0.1' >> ~/.klei/DoNotStarveTogether/server/cluster.ini
+echo 'master_port = 10889' >> ~/.klei/DoNotStarveTogether/server/cluster.ini
+echo 'cluster_key = alongclusterpass' >> ~/.klei/DoNotStarveTogether/server/cluster.ini
 
-echo '[network]' > ~/.klei/cave/settings.ini
-echo 'default_server_name = DST Server - Cave' >> ~/.klei/cave/settings.ini
-echo 'default_server_discription = DST Server With Caves' >> ~/.klei/cave/settings.ini
-echo 'server_port = 11001' >> ~/.klei/cave/settings.ini
-echo 'steam_authentication_port = 12348' >> ~/.klei/cave/settings.ini
-echo 'steam_master_server_port = 12349' >> ~/.klei/cave/settings.ini
-echo 'server_password = ' >> ~/.klei/cave/settings.ini
-echo 'max_players = 10' >> ~/.klei/cave/settings.ini
-echo 'pvp = false' >> ~/.klei/cave/settings.ini
-echo 'game_mode = endless' >> ~/.klei/cave/settings.ini
-echo 'enable_autosaver = true' >> ~/.klei/cave/settings.ini
-echo 'tick_rate = 30' >> ~/.klei/cave/settings.ini
-echo 'connection_timeout = 8000' >> ~/.klei/cave/settings.ini
-echo 'pause_when_empty = true' >> ~/.klei/cave/settings.ini
-echo 'steam_group_id = ' >> ~/.klei/cave/settings.ini
-echo 'steam_group_only = false' >> ~/.klei/cave/settings.ini
-echo 'offline_server = false' >> ~/.klei/cave/settings.ini
-echo '' >> ~/.klei/cave/settings.ini
-echo '[account]' >> ~/.klei/cave/settings.ini
-echo 'server_token = config me ' >> ~/.klei/cave/settings.ini
-echo '' >> ~/.klei/cave/settings.ini
-echo '[MISC]' >> ~/.klei/cave/settings.ini
-echo 'CONSOLE_ENABLED = true' >> ~/.klei/cave/settings.ini
-echo 'autocompiler_enabled = true' >> ~/.klei/cave/settings.ini
-echo '' >> ~/.klei/cave/settings.ini
-echo '[shard]' >> ~/.klei/cave/settings.ini
-echo 'shard_enable = true' >> ~/.klei/cave/settings.ini
-echo 'is_master = false' >> ~/.klei/cave/settings.ini
-echo 'master_ip = 127.0.0.1' >> ~/.klei/cave/settings.ini
-echo 'master_port = 11200' >> ~/.klei/cave/settings.ini
-echo 'shard_name = caves' >> ~/.klei/cave/settings.ini
-echo 'cluster_key = qwdsa' >> ~/.klei/cave/settings.ini
-echo '' >> ~/.klei/cave/settings.ini
+mkdir -p ~/.klei/DoNotStarveTogether/server/master/
+rm ~/.klei/DoNotStarveTogether/server/master/server.ini
+echo '[NETWORK]' >> ~/.klei/DoNotStarveTogether/server/master/server.ini
+echo 'server_port = 11000' >> ~/.klei/DoNotStarveTogether/server/master/server.ini
+echo '' >> ~/.klei/DoNotStarveTogether/server/master/server.ini
+echo '[SHARD]' >> ~/.klei/DoNotStarveTogether/server/master/server.ini
+echo 'is_master = true' >> ~/.klei/DoNotStarveTogether/server/master/server.ini
+echo '' >> ~/.klei/DoNotStarveTogether/server/master/server.ini
+echo '[STEAM]' >> ~/.klei/DoNotStarveTogether/server/master/server.ini
+echo 'master_server_port = 27018' >> ~/.klei/DoNotStarveTogether/server/master/server.ini
+echo 'authentication_port = 8768' >> ~/.klei/DoNotStarveTogether/server/master/server.ini
 
-echo 'return {' > ~/.klei/cave/worldgenoverride.lua
-echo 'override_enabled = true,' >> ~/.klei/cave/worldgenoverride.lua
-echo 'preset = "DST_CAVE",' >> ~/.klei/cave/worldgenoverride.lua
-echo '}' >> ~/.klei/cave/worldgenoverride.lua
+mkdir -p ~/.klei/DoNotStarveTogether/server/cave/
+rm ~/.klei/DoNotStarveTogether/server/cave/server.ini
+echo '[NETWORK]' >> ~/.klei/DoNotStarveTogether/server/cave/server.ini
+echo 'server_port = 11001' >> ~/.klei/DoNotStarveTogether/server/cave/server.ini
+echo '' >> ~/.klei/DoNotStarveTogether/server/cave/server.ini
+echo '[SHARD]' >> ~/.klei/DoNotStarveTogether/server/cave/server.ini
+echo 'is_master = false' >> ~/.klei/DoNotStarveTogether/server/cave/server.ini
+echo 'name = caves' >> ~/.klei/DoNotStarveTogether/server/cave/server.ini
+echo '' >> ~/.klei/DoNotStarveTogether/server/cave/server.ini
+echo '[STEAM]' >> ~/.klei/DoNotStarveTogether/server/cave/server.ini
+echo 'master_server_port = 27019' >> ~/.klei/DoNotStarveTogether/server/cave/server.ini
+echo 'authentication_port = 8768' >> ~/.klei/DoNotStarveTogether/server/cave/server.ini
+
+rm ~/.klei/DoNotStarveTogether/server/cave/worldgenoverride.lua
+echo 'return {' > ~/.klei/DoNotStarveTogether/server/cave/worldgenoverride.lua
+echo 'override_enabled = true,' >> ~/.klei/DoNotStarveTogether/server/cave/worldgenoverride.lua
+echo 'preset = "DST_CAVE",' >> ~/.klei/DoNotStarveTogether/server/cave/worldgenoverride.lua
+echo '}' >> ~/.klei/DoNotStarveTogether/server/cave/worldgenoverride.lua
 
 
 echo " ============================================ "
 echo " \              DST + Caves                 / "
 echo " \               Installed                  / "
-echo " \                                          / "
-echo " \     Make sure to edit settings.ini       / "
-echo " \        in ~/.klei/*/settings.ini         / "
-echo " \      and add your server_token key       / "
 echo " ============================================ "
 
 

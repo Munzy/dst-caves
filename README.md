@@ -1,3 +1,5 @@
+Moving content to here: https://git.enjen.net/Munzy/Valve-Linux-Server-Installs
+
 # dst-caves
 Install Don't Starve Together with caves ready to go!
 
