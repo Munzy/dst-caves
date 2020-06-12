@@ -1,6 +1,6 @@
-Moving content to here: https://git.enjen.net/Munzy/Valve-Linux-Server-Installs
+# Archived
+
+This project is no longer being updated. This was built sometime ago, and I have no current reason to update it. If you want to update it and create a pull request I'll gladly review and merge.
 
 # dst-caves
 Install Don't Starve Together with caves ready to go!
-
-Find more info at https://qwdsa.com/c/threads/dont-starve-together-cave-installer.196/#post-457
